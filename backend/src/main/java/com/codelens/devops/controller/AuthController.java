@@ -4,7 +4,7 @@ import com.codelens.devops.dto.ApiResponse;
 import com.codelens.devops.dto.auth.*;
 import com.codelens.devops.entity.User;
 import com.codelens.devops.service.AuthService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

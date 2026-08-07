@@ -1,6 +1,6 @@
 package com.codelens.devops.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
