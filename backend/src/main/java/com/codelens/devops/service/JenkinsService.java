@@ -52,8 +52,9 @@ public class JenkinsService {
 
     public List<Map<String, Object>> getAllJobs() {
         Map<String, Object> info = jenkinsGet("/api/json?tree=jobs[name,url,color,buildable]", new ParameterizedTypeReference<>() {});
-        if (info != null && info.get("jobs") instanceof List<?> jobs) {
-            return jobs.stream().filter(j -> j instanceof Map).map(j -> (Map<String, Object>) j).toList();
+        if (info != null && info.get("jobs") instanceof List) {
+            List<?> jobs = (List<?>) info.get("jobs");
+            return jobs.stream().filter(j -> j instanceof Map).map(j -> (Map<String, Object>) j).collect(java.util.stream.Collectors.toList());
         }
         return List.of();
     }

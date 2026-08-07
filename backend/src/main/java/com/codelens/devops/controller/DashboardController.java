@@ -31,14 +31,14 @@ public class DashboardController {
         Map<String, Object> jenkinsStats = jenkinsService.getJenkinsStats();
         Map<String, Long> apiStats = apiMonitorService.getApiStats();
 
-        long totalRepos = githubStats.get("totalRepos") instanceof Number n ? n.longValue() : 0;
-        long runningContainers = dockerStats.get("runningContainers") instanceof Number n ? n.longValue() : 0;
-        long stoppedContainers = dockerStats.get("stoppedContainers") instanceof Number n ? n.longValue() : 0;
-        long totalImages = dockerStats.get("totalImages") instanceof Number n ? n.longValue() : 0;
-        long totalJobs = jenkinsStats.get("totalJobs") instanceof Number n ? n.longValue() : 0;
-        long successfulJobs = jenkinsStats.get("successfulJobs") instanceof Number n ? n.longValue() : 0;
-        long failedJobs = jenkinsStats.get("failedJobs") instanceof Number n ? n.longValue() : 0;
-        double successRate = jenkinsStats.get("successRate") instanceof Number n ? n.doubleValue() : 0;
+        long totalRepos = githubStats.get("totalRepos") instanceof Number ? ((Number) githubStats.get("totalRepos")).longValue() : 0;
+        long runningContainers = dockerStats.get("runningContainers") instanceof Number ? ((Number) dockerStats.get("runningContainers")).longValue() : 0;
+        long stoppedContainers = dockerStats.get("stoppedContainers") instanceof Number ? ((Number) dockerStats.get("stoppedContainers")).longValue() : 0;
+        long totalImages = dockerStats.get("totalImages") instanceof Number ? ((Number) dockerStats.get("totalImages")).longValue() : 0;
+        long totalJobs = jenkinsStats.get("totalJobs") instanceof Number ? ((Number) jenkinsStats.get("totalJobs")).longValue() : 0;
+        long successfulJobs = jenkinsStats.get("successfulJobs") instanceof Number ? ((Number) jenkinsStats.get("successfulJobs")).longValue() : 0;
+        long failedJobs = jenkinsStats.get("failedJobs") instanceof Number ? ((Number) jenkinsStats.get("failedJobs")).longValue() : 0;
+        double successRate = jenkinsStats.get("successRate") instanceof Number ? ((Number) jenkinsStats.get("successRate")).doubleValue() : 0;
 
         long totalApis = apiStats.getOrDefault("total", 0L);
         long healthyApis = apiStats.getOrDefault("healthy", 0L);

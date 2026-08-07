@@ -102,13 +102,13 @@ public class GithubService {
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalRepos", repos.size());
         long totalStars = repos.stream()
-                .mapToLong(r -> r.get("stargazers_count") instanceof Number n ? n.longValue() : 0)
+                .mapToLong(r -> r.get("stargazers_count") instanceof Number ? ((Number) r.get("stargazers_count")).longValue() : 0)
                 .sum();
         long totalForks = repos.stream()
-                .mapToLong(r -> r.get("forks_count") instanceof Number n ? n.longValue() : 0)
+                .mapToLong(r -> r.get("forks_count") instanceof Number ? ((Number) r.get("forks_count")).longValue() : 0)
                 .sum();
         long openIssues = repos.stream()
-                .mapToLong(r -> r.get("open_issues_count") instanceof Number n ? n.longValue() : 0)
+                .mapToLong(r -> r.get("open_issues_count") instanceof Number ? ((Number) r.get("open_issues_count")).longValue() : 0)
                 .sum();
         stats.put("totalStars", totalStars);
         stats.put("totalForks", totalForks);

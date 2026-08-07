@@ -105,8 +105,9 @@ public class DockerService {
 
     public List<Map<String, Object>> getAllVolumes() {
         Map<String, Object> result = dockerGet("/v1.41/volumes", new ParameterizedTypeReference<>() {});
-        if (result != null && result.get("Volumes") instanceof List<?> volumes) {
-            return volumes.stream().filter(v -> v instanceof Map).map(v -> (Map<String, Object>) v).toList();
+        if (result != null && result.get("Volumes") instanceof List) {
+            List<?> volumes = (List<?>) result.get("Volumes");
+            return volumes.stream().filter(v -> v instanceof Map).map(v -> (Map<String, Object>) v).collect(java.util.stream.Collectors.toList());
         }
         return List.of();
     }
