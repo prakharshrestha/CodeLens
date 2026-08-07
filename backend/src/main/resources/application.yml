@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: DevOps Command Center
+  datasource:
+    url: jdbc:postgresql://localhost:5432/codelens_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  jackson:
+    time-zone: UTC
+    date-format: yyyy-MM-dd HH:mm:ss
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+  expiration: 86400000  # 24 hours in ms
+  refresh-expiration: 604800000  # 7 days in ms
+
+# GitHub API Configuration
+github:
+  api-base-url: https://api.github.com
+  token: ${GITHUB_TOKEN:}
+  default-username: ${GITHUB_USERNAME:prakharshrestha}
+
+# Jenkins Configuration
+jenkins:
+  base-url: ${JENKINS_URL:http://localhost:8090}
+  username: ${JENKINS_USERNAME:admin}
+  token: ${JENKINS_TOKEN:}
+
+# Docker Configuration
+docker:
+  host: ${DOCKER_HOST:tcp://localhost:2375}
+  api-version: v1.41
+
+# API Monitor Configuration
+api-monitor:
+  check-interval-ms: 60000
+  timeout-ms: 10000
+
+# Scheduler
+scheduler:
+  github-fetch-cron: "0 */5 * * * *"   # every 5 minutes
+  docker-stats-cron: "0 */2 * * * *"   # every 2 minutes
+  api-health-cron: "0 */1 * * * *"     # every minute
+
+# Logging
+logging:
+  level:
+    com.codelens: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
