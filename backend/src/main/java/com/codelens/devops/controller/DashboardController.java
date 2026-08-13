@@ -3,11 +3,13 @@ package com.codelens.devops.controller;
 import com.codelens.devops.dto.ApiResponse;
 import com.codelens.devops.dto.dashboard.DashboardStatsDto;
 import com.codelens.devops.entity.Alert;
+import com.codelens.devops.entity.User;
 import com.codelens.devops.repository.AlertRepository;
 import com.codelens.devops.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +27,8 @@ public class DashboardController {
     private final AlertRepository alertRepository;
 
     @GetMapping("/stats")
-    public ResponseEntity<ApiResponse<DashboardStatsDto>> getDashboardStats() {
-        Map<String, Object> githubStats = githubService.getGithubStats();
+    public ResponseEntity<ApiResponse<DashboardStatsDto>> getDashboardStats(@AuthenticationPrincipal User user) {
+        Map<String, Object> githubStats = githubService.getGithubStats(user.getGithubUsername(), user.getGithubToken());
         Map<String, Object> dockerStats = dockerService.getDockerStats();
         Map<String, Object> jenkinsStats = jenkinsService.getJenkinsStats();
         Map<String, Long> apiStats = apiMonitorService.getApiStats();
@@ -52,7 +54,7 @@ public class DashboardController {
                 .totalRepositories(totalRepos)
                 .totalCommits(0L)  // Would require DB caching
                 .activeContributors(0L)
-                .githubStatus(githubService.getGithubStats().isEmpty() ? "DISCONNECTED" : "CONNECTED")
+                .githubStatus(githubStats.isEmpty() ? "DISCONNECTED" : "CONNECTED")
                 .runningContainers(runningContainers)
                 .stoppedContainers(stoppedContainers)
                 .totalImages(totalImages)

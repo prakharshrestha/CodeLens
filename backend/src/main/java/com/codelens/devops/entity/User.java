@@ -44,6 +44,12 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "github_token")
+    private String githubToken;
+
+    @Column(name = "github_username")
+    private String githubUsername;
+
     private boolean active;
 
     @PrePersist

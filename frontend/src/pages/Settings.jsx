@@ -1,18 +1,36 @@
-import { useState } from 'react'
-import { User, Lock, Bell, Palette, Globe, Save, AlertCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { User, Lock, Bell, Palette, Globe, Save, AlertCircle, Github } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useThemeStore } from '../store/themeStore'
 import { authService } from '../services/authService'
+import { settingsService } from '../services/settingsService'
 import toast from 'react-hot-toast'
 
 export default function Settings() {
   const { user, updateUser } = useAuthStore()
   const { theme, toggleTheme } = useThemeStore()
-  const [activeTab, setActiveTab] = useState('profile')
+  const [activeTab, setActiveTab] = useState('integrations')
   const [profileForm, setProfileForm] = useState({ name: user?.name || '', email: user?.email || '' })
   const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+  const [githubForm, setGithubForm] = useState({ githubUsername: '', githubToken: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetchSettings()
+  }, [])
+
+  const fetchSettings = async () => {
+    try {
+      const data = await settingsService.getSettings()
+      setGithubForm({
+        githubUsername: data.githubUsername || '',
+        githubToken: data.githubToken || ''
+      })
+    } catch (error) {
+      console.error("Failed to load settings", error)
+    }
+  }
 
   const handlePasswordChange = async (e) => {
     e.preventDefault()
@@ -31,7 +49,21 @@ export default function Settings() {
     }
   }
 
+  const handleGithubSave = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      await settingsService.updateSettings(githubForm)
+      toast.success('GitHub credentials saved successfully')
+    } catch (err) {
+      toast.error('Failed to save GitHub credentials')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const tabs = [
+    { id: 'integrations', label: 'Integrations', icon: Globe },
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'security', label: 'Security', icon: Lock },
     { id: 'appearance', label: 'Appearance', icon: Palette },
@@ -42,7 +74,7 @@ export default function Settings() {
       <div className="page-header">
         <div className="page-header-left">
           <h1 className="page-title">Settings</h1>
-          <p className="page-subtitle">Manage your account preferences</p>
+          <p className="page-subtitle">Manage your account and integrations</p>
         </div>
       </div>
 
@@ -64,6 +96,45 @@ export default function Settings() {
 
         {/* Content */}
         <div className="card">
+          
+          {activeTab === 'integrations' && (
+            <div>
+              <h2 className="section-title">GitHub Integration</h2>
+              <p style={{ color: 'var(--color-text-secondary)', marginBottom: '24px' }}>
+                Connect your GitHub account to enable GitBranch Analytics.
+              </p>
+              <form onSubmit={handleGithubSave} style={{ display: 'grid', gap: '16px', maxWidth: '480px' }}>
+                <div className="form-group">
+                  <label className="form-label">GitHub Username</label>
+                  <input 
+                    className="form-input" 
+                    placeholder="e.g. prakharshrestha"
+                    value={githubForm.githubUsername} 
+                    onChange={e => setGithubForm(f => ({ ...f, githubUsername: e.target.value }))} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Personal Access Token</label>
+                  <input 
+                    type="password" 
+                    className="form-input" 
+                    placeholder="ghp_xxxxxxxxxxxx"
+                    value={githubForm.githubToken} 
+                    onChange={e => setGithubForm(f => ({ ...f, githubToken: e.target.value }))} 
+                    required 
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
+                    Generate a token with 'repo' scope in your GitHub Developer Settings.
+                  </p>
+                </div>
+                <button type="submit" className="btn btn-primary" style={{ width: 'fit-content' }} disabled={loading}>
+                  <Github size={16} /> {loading ? 'Saving...' : 'Save Configuration'}
+                </button>
+              </form>
+            </div>
+          )}
+
           {activeTab === 'profile' && (
             <div>
               <h2 className="section-title">Profile Information</h2>

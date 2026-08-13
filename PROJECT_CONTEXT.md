@@ -3,7 +3,7 @@
 **This file acts as the persistent context and memory for the project. Its purpose is to reduce unnecessary re-analysis and token usage during future development sessions. It must be updated whenever there is a significant architectural or feature change.**
 
 ## 1. Project Overview
-**DevOps Command Center** is a centralized web-based dashboard designed to simplify the monitoring and management of the complete software development and deployment lifecycle. It provides a unified interface to view analytics, manage infrastructure, monitor deployments, and track application health in real-time, eliminating the need to switch between multiple tools (GitHub, Docker, Jenkins, API monitors).
+**DevOps Command Center** is a centralized web-based dashboard designed to simplify the monitoring and management of the complete software development and deployment lifecycle. It is built as a **Multi-Tenant SaaS Product**, meaning any user can create an account, securely store their own integrations (like GitHub tokens), and view their own personal analytics.
 
 ## 2. Technology Stack
 *   **Frontend**: React, Vite, JavaScript, CSS (Vanilla, styled with modern dark-mode glassmorphism aesthetics).
@@ -12,8 +12,8 @@
 *   **Infrastructure**: Docker, Docker Compose (for orchestration), Nginx (serving the frontend and proxying `/api` requests).
 
 ## 3. Core Modules
-1.  **GitHub Analytics**: Provides repository insights, commit analysis, contributor stats, and branch activity. Requires a Personal Access Token (`GITHUB_TOKEN` environment variable).
-2.  **Docker Container Manager**: Manages local Docker containers (view status, CPU/RAM, logs, start/stop containers). Connects via `tcp://host.docker.internal:2375`.
+1.  **GitHub Analytics**: Provides repository insights, commit analysis, contributor stats, and branch activity. Requires users to configure their own GitHub Username and Personal Access Token via the Settings page.
+2.  **Docker Container Manager**: Manages local Docker containers. Note: Will show disconnected when deployed to PaaS like Render because they do not expose a Docker socket.
 3.  **API Monitor**: Pings configured endpoints to track uptime, response time, and HTTP status codes.
 4.  **Jenkins CI/CD**: Monitors build pipelines (Future/WIP integration).
 5.  **Dashboard Overview**: A unified screen aggregating data from all the above modules.
@@ -34,6 +34,10 @@
     *   Successfully dockerized the entire application via `docker-compose`.
     *   Fixed Spring Security `antMatchers` and Java 11 compatibility issues.
     *   JWT Registration and Login are fully functional.
+*   **Current Iteration (Multi-Tenant SaaS)**:
+    *   Transitioned the architecture from a single-user dashboard to a multi-tenant SaaS.
+    *   Moved `GITHUB_TOKEN` from a global environment variable to securely stored user credentials in the database (`users` table).
+    *   Built a dynamic Settings UI on the frontend for users to manage their GitHub integrations.
 *   **Next Steps for Future Sessions**:
     *   Populate Jenkins CI/CD module functionality.
     *   Expand UI features and flesh out detailed monitoring logic.

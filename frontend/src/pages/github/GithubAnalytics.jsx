@@ -6,8 +6,9 @@ import {
 } from 'recharts'
 import {
   GitBranch, Star, GitFork, Eye, GitCommit, Users,
-  AlertCircle, Code, ExternalLink, RefreshCw
+  AlertCircle, Code, ExternalLink, RefreshCw, Settings
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { githubService } from '../../services/githubService'
 import StatCard from '../../components/ui/StatCard'
 import ChartCard from '../../components/charts/ChartCard'
@@ -36,10 +37,11 @@ export default function GithubAnalytics() {
     refetchInterval: REFRESH_INTERVALS.GitBranch,
   })
 
-  const { data: reposRes, isLoading: reposLoading } = useQuery({
+  const { data: reposRes, isLoading: reposLoading, error: reposError } = useQuery({
     queryKey: ['github-repos'],
     queryFn: githubService.getRepos,
     refetchInterval: REFRESH_INTERVALS.GitBranch,
+    retry: false
   })
 
   const { data: commitsRes } = useQuery({
@@ -75,6 +77,23 @@ export default function GithubAnalytics() {
   }))
 
   if (reposLoading) return <Loader text="Loading GitBranch data..." />
+
+  if (reposError) {
+    return (
+      <div style={{ padding: '40px 20px' }}>
+        <EmptyState 
+          icon={AlertCircle} 
+          title="GitHub Not Configured" 
+          description={reposError.response?.data?.message || "Please configure your GitHub credentials in Settings to view analytics."} 
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+          <Link to="/settings" className="btn btn-primary" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <Settings size={16} /> Go to Settings
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
