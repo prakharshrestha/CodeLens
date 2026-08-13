@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { User, Lock, Bell, Palette, Globe, Save, AlertCircle, Github } from 'lucide-react'
+import { User, Lock, Bell, Palette, Globe, Save, AlertCircle, GitBranch } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useThemeStore } from '../store/themeStore'
 import { authService } from '../services/authService'
@@ -129,7 +129,7 @@ export default function Settings() {
                   </p>
                 </div>
                 <button type="submit" className="btn btn-primary" style={{ width: 'fit-content' }} disabled={loading}>
-                  <Github size={16} /> {loading ? 'Saving...' : 'Save Configuration'}
+                  <GitBranch size={16} /> {loading ? 'Saving...' : 'Save Configuration'}
                 </button>
               </form>
             </div>
