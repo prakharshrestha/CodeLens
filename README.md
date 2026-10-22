@@ -124,6 +124,4 @@ Swagger UI available at: `http://localhost:8080/api/swagger-ui.html`
 
 **DevOps**: Docker, Docker Compose, Jenkins, GitHub Actions, Nginx
 
-## License
 
-MIT License — Free to use and modify.
